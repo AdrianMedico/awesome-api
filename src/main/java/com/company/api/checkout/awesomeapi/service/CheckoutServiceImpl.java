@@ -12,16 +12,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class CheckoutServiceImpl implements CheckoutService<List<Watch>>  {
-
+public class CheckoutServiceImpl implements CheckoutService<List<Watch>, String> {
 
   @Override
   public String totalPrice(List<Watch> watches) {
+    Objects.nonNull(watches);
     Map<Watch, Long> groupedWatchesByQuantity = getWatchesGroupedById(watches);
 
     Long price = sumPrices(groupedWatchesByQuantity);
@@ -30,10 +31,15 @@ public class CheckoutServiceImpl implements CheckoutService<List<Watch>>  {
   }
 
   public Map<Watch, Long> getWatchesGroupedById(List<Watch> watches) {
-    return watches.stream()
+    return handleWatchList(watches).stream()
         .filter(Objects::nonNull)
         .filter(watch -> !watch.getId().isEmpty())
         .collect(groupingBy(identity(), counting()));
+  }
+
+  private List<Watch> handleWatchList(List<Watch> watches) {
+    return Optional.ofNullable(watches)
+        .orElseThrow(() -> new IllegalArgumentException("Watches list couldn't be null"));
   }
 
   private Long sumPrices(Map<Watch, Long> groupedWatchesByQuantity) {
@@ -65,7 +71,7 @@ public class CheckoutServiceImpl implements CheckoutService<List<Watch>>  {
 
   private String marshallingToJson(Long price) {
     ObjectMapper mapper = new ObjectMapper();
-    return mapper.createObjectNode().put("price", String.valueOf(price)).toString();
+    return mapper.createObjectNode().put("price", price).toString();
   }
 
 }

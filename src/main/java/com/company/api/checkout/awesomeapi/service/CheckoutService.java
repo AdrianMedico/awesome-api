@@ -1,7 +1,7 @@
 package com.company.api.checkout.awesomeapi.service;
 
-public interface CheckoutService<A>{
+public interface CheckoutService<A, R> {
 
-  String totalPrice(A watches);
+  R totalPrice(A watches);
 
 }
