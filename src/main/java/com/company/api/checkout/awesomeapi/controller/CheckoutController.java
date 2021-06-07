@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CheckoutController {
 
-  private final CheckoutService<List<Watch>> checkoutService;
+  private final CheckoutService<List<Watch>, String> checkoutService;
 
   @Autowired
-  public CheckoutController(CheckoutService<List<Watch>> checkoutService) {
+  public CheckoutController(CheckoutService<List<Watch>, String> checkoutService) {
     this.checkoutService = checkoutService;
   }
 

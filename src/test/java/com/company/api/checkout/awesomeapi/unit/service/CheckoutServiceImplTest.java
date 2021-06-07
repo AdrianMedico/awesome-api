@@ -1,8 +1,9 @@
-package com.company.api.checkout.awesomeapi.service;
+package com.company.api.checkout.awesomeapi.unit.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.company.api.checkout.awesomeapi.data.dto.Watch;
+import com.company.api.checkout.awesomeapi.service.CheckoutServiceImpl;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONException;
@@ -14,10 +15,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 @WebMvcTest(CheckoutServiceImpl.class)
 class CheckoutServiceImplTest {
 
-  private static final String EXPECTED_JSON = "{ \"price\": 550 }";
-
   @Autowired
   private CheckoutServiceImpl service;
+
+  private static final String EXPECTED_JSON = "{ \"price\": 550 }";
 
   @Test
   void totalPriceShouldReturnExpectedSum() throws JSONException {
@@ -45,9 +46,8 @@ class CheckoutServiceImplTest {
     // given
     List<Watch> watches = null;
 
-    assertThatThrownBy(() -> {
-      service.totalPrice(watches);
-    }).isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> service.totalPrice(watches))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   private List<Watch> mockData() {
