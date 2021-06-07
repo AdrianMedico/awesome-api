@@ -30,7 +30,7 @@ class AwesomeApiApplicationTests {
         .content(setMockContent()))
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.price", is("380")));
+        .andExpect(jsonPath("$.price", is(380)));
   }
 
   @Test
@@ -42,7 +42,7 @@ class AwesomeApiApplicationTests {
         .content("[]"))
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.price", is("0")));
+        .andExpect(jsonPath("$.price", is(0)));
   }
 
   private String setMockContent() {

@@ -1,6 +1,4 @@
 
-
-
 # Awesome-api
 
 
@@ -27,9 +25,10 @@
 
 ### Built With
 
+* [Java 11](https://adoptopenjdk.net)
 * [Spring Boot](https://spring.io/projects/spring-boot)
-* [Lombok](https://projectlombok.org/)
 * [Jackson](https://github.com/FasterXML/jackson)
+* [Gradle](https://gradle.org/)
 
 ## Getting Started
 
@@ -41,14 +40,18 @@ To get a local copy up and running follow these steps:
   [Installation Guide](https://adoptopenjdk.net/installation.html)
   
 * Postman, Insomnia, Swagger UI, Paw or similar API tool 
+
+* Gradle [Installation Guide](https://gradle.org/install/)
   
   
 
 ### Installation
 
-1.
-2. 
-3.
+1. Clone the project to your local environment
+2. Go to the project root file
+3. Run the command: ``` gradle build ```
+4. Once the build is completed execute: ```java -jar build/libs/awesome-api-1.0.0-SNAPSHOT.jar```
+5. On your API tool do the request
 
 ## Usage
 
@@ -62,6 +65,7 @@ Available Watches:
 
 
 ## Roadmap
+[![Issues][issues-shield]][issues-url]
 
 See the [open issues](https://github.com/AdrianMedico/awesome-api/issues) for a list of proposed features.
 
@@ -69,5 +73,7 @@ See the [open issues](https://github.com/AdrianMedico/awesome-api/issues) for a 
 
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
+[issues-shield]: https://img.shields.io/github/issues/AdrianMedico/awesome-api?style=for-the-badge
+[issues-url]: https://github.com/AdrianMedico/awesome-api/issues
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/adrian-medico
