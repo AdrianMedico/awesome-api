@@ -8,6 +8,5 @@ import lombok.Data;
 public class Watch {
 
   private String id;
-  private int price;
 
 }

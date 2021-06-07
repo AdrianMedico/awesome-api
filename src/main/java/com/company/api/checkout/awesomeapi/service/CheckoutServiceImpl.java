@@ -1,36 +1,71 @@
 package com.company.api.checkout.awesomeapi.service;
 
-import com.company.api.checkout.awesomeapi.data.dto.CheckoutAmount;
+import static com.company.api.checkout.awesomeapi.data.dto.WatchModels.*;
+import static java.util.function.Function.*;
+import static java.util.stream.Collectors.*;
+
 import com.company.api.checkout.awesomeapi.data.dto.Watch;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
+
+import com.company.api.checkout.awesomeapi.data.dto.WatchModels;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class CheckoutServiceImpl implements CheckoutService {
+public class CheckoutServiceImpl implements CheckoutService<List<Watch>>  {
+
 
   @Override
-  public CheckoutAmount totalPrice(List<Watch> watches) {
-    CheckoutAmount amount = new CheckoutAmount();
+  public String totalPrice(List<Watch> watches) {
+    Map<Watch, Long> groupedWatchesByQuantity = getWatchesGroupedById(watches);
 
-    return amount;
+    Long price = sumPrices(groupedWatchesByQuantity);
+
+    return marshallingToJson(price);
   }
 
-  private List<Watch> marshallJson(String json) throws JsonProcessingException {
-
-    ObjectMapper objectMapper = new ObjectMapper();
-
-    List<Watch> watches = objectMapper.readValue(json, new TypeReference<List<Watch>>() {});
-
-    return watches;
+  public Map<Watch, Long> getWatchesGroupedById(List<Watch> watches) {
+    return watches.stream()
+        .filter(Objects::nonNull)
+        .filter(watch -> !watch.getId().isEmpty())
+        .collect(groupingBy(identity(), counting()));
   }
 
-  private void splitItemsById(List<Watch> watches) {
+  private Long sumPrices(Map<Watch, Long> groupedWatchesByQuantity) {
+    return groupedWatchesByQuantity.entrySet().stream()
+        .mapToLong(this::selectModel).sum();
+  }
 
+  private Long selectModel(Entry<Watch, Long> entry) {
+    Long result = 0l;
+    if (ROLEX.getId().equals(entry.getKey().getId())) {
+      result = sumWatches(ROLEX, entry.getValue());
+    } else if (MICHAEL_KORS.getId().equals(entry.getKey().getId())) {
+      result = sumWatches(MICHAEL_KORS, entry.getValue());
+    } else if (SWATCH.getId().equals(entry.getKey().getId())) {
+      result = sumWatches(SWATCH, entry.getValue());
+    } else if (CASIO.getId().equals(entry.getKey().getId())) {
+      result = sumWatches(CASIO, entry.getValue());
+    }
+    return result;
+  }
+
+  private Long sumWatches(WatchModels model, Long count) {
+    long howManyHasDiscount = count / model.getWatchesUntilDiscount();
+    long howManyWithoutDiscount = count % model.getWatchesUntilDiscount();
+
+    return (howManyHasDiscount * model.getPromoPrice()) + (howManyWithoutDiscount * model
+        .getPrice());
+  }
+
+  private String marshallingToJson(Long price) {
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.createObjectNode().put("price", String.valueOf(price)).toString();
   }
 
 }
